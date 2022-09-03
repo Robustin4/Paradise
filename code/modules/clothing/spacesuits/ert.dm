@@ -260,6 +260,32 @@
 	armor = list(melee = 65, bullet = 50, laser = 50, energy = 50, bomb = 50, bio = 100, rad = 100, fire = 80, acid = 80)
 	slowdown = 0
 
+//botanic
+
+/obj/item/clothing/head/helmet/space/hardsuit/ert/botanic
+	name = "emergency response team botanic helmet"
+	desc = "A helmet worn by botanical members of a Nanotrasen Emergency Response Team. Has green highlights. Armoured and space ready."
+	icon_state = "hardsuit0-ert_botanic"
+	item_color = "ert_janitor"
+
+/obj/item/clothing/head/helmet/space/hardsuit/ert/botanic/gamma
+	name = "elite emergency response team botanic helmet"
+	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	icon_state = "hardsuit0-gammabotanic"
+	item_color = "gammajanitor"
+
+/obj/item/clothing/suit/space/hardsuit/ert/botanic
+	name = "emergency response team botanic suit"
+	desc = "A suit worn by the botanical of a Nanotrasen Emergency Response Team. Has green highlights. Armoured, space ready, and fire resistant."
+	icon_state = "ert_botanic"
+	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/ert/botanic
+
+/obj/item/clothing/suit/space/hardsuit/ert/botanic/gamma
+	name = "elite emergency response team janitor suit"
+	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	icon_state = "ert_gbotanic"
+	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/ert/botanic/gamma
+
 	//Deathsquad hardsuit
 /obj/item/clothing/head/helmet/space/hardsuit/deathsquad
 	name = "deathsquad helmet"

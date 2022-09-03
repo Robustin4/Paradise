@@ -479,8 +479,14 @@
 //Janitorial
 /obj/item/clothing/suit/armor/vest/ert/janitor
 	name = "emergency response team janitor armor"
-	desc = "A set of armor worn by janitorial members of the Nanotrasen Emergency Response Team. Has red and white highlights."
+	desc = "A set of armor worn by janitorial members of the Nanotrasen Emergency Response Team. Has purple highlights."
 	icon_state = "ertarmor_jan"
+
+//Janitorial
+/obj/item/clothing/suit/armor/vest/ert/botanic
+	name = "emergency response team botanic armor"
+	desc = "A set of armor worn by botanical members of the Nanotrasen Emergency Response Team. Has green highlights."
+	icon_state = "ertarmor_btn"
 
 //same defense as basic sec armor
 /obj/item/clothing/suit/storage/lawyer/blackjacket/armored

@@ -967,6 +967,10 @@
 	icon_state = "ERT_engineering"
 /obj/item/card/id/ert/medic
 	icon_state = "ERT_medical"
+/obj/item/card/id/ert/janitor
+	icon_state = "ERT_janitoral"
+/obj/item/card/id/ert/botanic
+	icon_state = "ERT_botanical"
 
 /obj/item/card/id/golem
 	name = "Free Golem ID"

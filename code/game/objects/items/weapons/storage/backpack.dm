@@ -713,3 +713,9 @@
 	name = "emergency response team janitor backpack"
 	desc = "A spacious backpack with lots of pockets, worn by janitorial members of a Nanotrasen Emergency Response Team."
 	icon_state = "ert_janitor"
+
+//Botanical
+/obj/item/storage/backpack/ert/botanic
+	name = "emergency response team botanic backpack"
+	desc = "A spacious backpack with lots of pockets, worn by botanical members of a Nanotrasen Emergency Response Team."
+	icon_state = "ert_botanic"

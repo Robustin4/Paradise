@@ -109,6 +109,10 @@
 	item_color = "hydroponics"
 	permeability_coefficient = 0.50
 
+/obj/item/clothing/under/rank/hydroponics/sensor //botanical ert yohoo
+	sensor_mode = SENSOR_COORDS
+	random_sensor = FALSE
+
 /obj/item/clothing/under/rank/internalaffairs
 	desc = "The plain, professional attire of an Internal Affairs Agent. The collar is <i>immaculately</i> starched."
 	name = "Internal Affairs uniform"
@@ -137,6 +141,9 @@
 	item_color = "janitor"
 	armor = list("melee" = 0, "bullet" = 0, "laser" = 0,"energy" = 0, "bomb" = 0, "bio" = 10, "rad" = 0, "fire" = 0, "acid" = 0)
 
+/obj/item/clothing/under/rank/janitor/sensor //true jani ert
+	sensor_mode = SENSOR_COORDS
+	random_sensor = FALSE
 
 /obj/item/clothing/under/lawyer
 	desc = "Slick threads."

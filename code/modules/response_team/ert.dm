@@ -57,10 +57,10 @@ GLOBAL_VAR_INIT(ert_request_answered, FALSE)
 
 	return 1
 
-/proc/trigger_armed_response_team(datum/response_team/response_team_type, commander_slots, security_slots, medical_slots, engineering_slots, janitor_slots, paranormal_slots, cyborg_slots)
+/proc/trigger_armed_response_team(datum/response_team/response_team_type, commander_slots, security_slots, medical_slots, engineering_slots, janitor_slots, botanic_slots, paranormal_slots, cyborg_slots)
 	GLOB.response_team_members = list()
 	GLOB.active_team = response_team_type
-	GLOB.active_team.setSlots(commander_slots, security_slots, medical_slots, engineering_slots, janitor_slots, paranormal_slots, cyborg_slots)
+	GLOB.active_team.setSlots(commander_slots, security_slots, medical_slots, engineering_slots, janitor_slots, botanic_slots, paranormal_slots, cyborg_slots)
 
 	GLOB.send_emergency_team = TRUE
 	var/list/ert_candidates = shuffle(SSghost_spawns.poll_candidates("Join the Emergency Response Team?",, GLOB.responseteam_age, 60 SECONDS, TRUE, GLOB.role_playtime_requirements[ROLE_ERT]))
@@ -196,6 +196,7 @@ GLOBAL_VAR_INIT(ert_request_answered, FALSE)
 		Engineer = 0,
 		Medic = 0,
 		Janitor = 0,
+		Botanic = 0,
 		Paranormal = 0,
 		Cyborg = 0
 	)
@@ -206,15 +207,17 @@ GLOBAL_VAR_INIT(ert_request_answered, FALSE)
 	var/medical_outfit
 	var/security_outfit
 	var/janitor_outfit
+	var/botanic_outfit
 	var/paranormal_outfit
 	var/borg_path = /mob/living/silicon/robot/ert
 
-/datum/response_team/proc/setSlots(com=1, sec=4, med=0, eng=0, jan=0, par=0, cyb=0)
+/datum/response_team/proc/setSlots(com=1, sec=4, med=0, eng=0, jan=0, btn=0, par=0, cyb=0)
 	slots["Commander"] = com
 	slots["Security"] = sec
 	slots["Medic"] = med
 	slots["Engineer"] = eng
 	slots["Janitor"] = jan
+	slots["Botanic"] = btn
 	slots["Paranormal"] = par
 	slots["Cyborg"] = cyb
 
@@ -247,6 +250,9 @@ GLOBAL_VAR_INIT(ert_request_answered, FALSE)
 		if("Janitor")
 			M.equipOutfit(janitor_outfit)
 
+		if("Botanic")
+			M.equipOutfit(botanic_outfit)
+
 		if("Paranormal")
 			M.equipOutfit(paranormal_outfit)
 
@@ -267,6 +273,7 @@ GLOBAL_VAR_INIT(ert_request_answered, FALSE)
 	medical_outfit = /datum/outfit/job/centcom/response_team/medic/amber
 	command_outfit = /datum/outfit/job/centcom/response_team/commander/amber
 	janitor_outfit = /datum/outfit/job/centcom/response_team/janitorial/amber
+	janitor_outfit = /datum/outfit/job/centcom/response_team/botanical/amber
 	paranormal_outfit = /datum/outfit/job/centcom/response_team/paranormal/amber
 
 /datum/response_team/amber/announce_team()
@@ -280,6 +287,7 @@ GLOBAL_VAR_INIT(ert_request_answered, FALSE)
 	medical_outfit = /datum/outfit/job/centcom/response_team/medic/red
 	command_outfit = /datum/outfit/job/centcom/response_team/commander/red
 	janitor_outfit = /datum/outfit/job/centcom/response_team/janitorial/red
+	janitor_outfit = /datum/outfit/job/centcom/response_team/botanical/red
 	paranormal_outfit = /datum/outfit/job/centcom/response_team/paranormal/red
 	borg_path = /mob/living/silicon/robot/ert/red
 
@@ -294,6 +302,7 @@ GLOBAL_VAR_INIT(ert_request_answered, FALSE)
 	medical_outfit = /datum/outfit/job/centcom/response_team/medic/gamma
 	command_outfit = /datum/outfit/job/centcom/response_team/commander/gamma
 	janitor_outfit = /datum/outfit/job/centcom/response_team/janitorial/gamma
+	janitor_outfit = /datum/outfit/job/centcom/response_team/botanical/gamma
 	paranormal_outfit = /datum/outfit/job/centcom/response_team/paranormal/gamma
 	borg_path = /mob/living/silicon/robot/ert/gamma
 

@@ -484,13 +484,13 @@
 	name = "RT Janitor"
 	rt_job = "Emergency Response Team Janitor"
 	rt_mob_job = "ERT Janitor"
-	uniform = /obj/item/clothing/under/color/purple/sensor
+	uniform = /obj/item/clothing/under/rank/janitor/sensor
 	back = /obj/item/storage/backpack/ert/janitor
 	belt = /obj/item/storage/belt/janitor/full
 	gloves = /obj/item/clothing/gloves/combat
 	shoes = /obj/item/clothing/shoes/galoshes
 	l_ear = /obj/item/radio/headset/ert/alt
-	id = /obj/item/card/id/centcom
+	id = /obj/item/card/id/ert/janitor
 	pda = /obj/item/pda/centcom
 	l_pocket = /obj/item/melee/classic_baton/telescopic
 	backpack_contents = list(
@@ -544,6 +544,67 @@
 
 	cybernetic_implants = list(
 		/obj/item/organ/internal/cyberimp/arm/advmop,
+		/obj/item/organ/internal/cyberimp/brain/anti_stun/hardened
+	)
+
+	implants = list(/obj/item/implant/mindshield/ert,
+		/obj/item/implant/death_alarm
+	)
+
+//////////////////// BOTANICAL ///////////////////
+
+/datum/outfit/job/centcom/response_team/botanical
+	name = "RT Botanic"
+	rt_job = "Emergency Response Team Botanic"
+	rt_mob_job = "ERT Botanic"
+	uniform = /obj/item/clothing/under/rank/hydroponics/sensor
+	back = /obj/item/storage/backpack/ert/botanic
+	belt = /obj/item/storage/belt/botany/full
+	gloves = /obj/item/clothing/gloves/combat
+	shoes = /obj/item/clothing/shoes/combat
+	l_ear = /obj/item/radio/headset/ert/alt
+	id = /obj/item/card/id/ert/botanic
+	pda = /obj/item/pda/centcom
+	l_pocket = /obj/item/melee/classic_baton/telescopic
+	backpack_contents = list(
+		/obj/item/grenade/chem_grenade/antiweed = 4,
+		/obj/item/flashlight = 1)
+
+/datum/outfit/job/centcom/response_team/botanical/amber
+	name = "RT Botanic (Amber)"
+	suit = /obj/item/clothing/suit/armor/vest/ert/botanic
+	head = /obj/item/clothing/head/helmet/ert/botanic
+	glasses = /obj/item/clothing/glasses/hud/hydroponic/sunglasses
+
+	r_hand = /obj/item/gun/energy/disabler
+
+/datum/outfit/job/centcom/response_team/botanical/red
+	name = "RT Botanic (Red)"
+	suit = /obj/item/clothing/suit/space/hardsuit/ert/botanic
+	glasses = /obj/item/clothing/glasses/hud/security/sunglasses
+
+	r_pocket = /obj/item/scythe/tele
+	l_pocket = /obj/item/gun/energy/gun/mini
+
+	cybernetic_implants = list(
+		/obj/item/organ/internal/cyberimp/arm/botanical,
+		/obj/item/organ/internal/cyberimp/chest/nutriment
+	)
+
+/datum/outfit/job/centcom/response_team/botanical/gamma
+	name = "RT Botanical (Gamma)"
+	suit = /obj/item/clothing/suit/space/hardsuit/ert/botanic/gamma
+	suit_store = /obj/item/gun/energy/gun
+	l_pocket = /obj/item/grenade/chem_grenade/antiweed
+	r_pocket = /obj/item/scythe/tele
+	shoes = /obj/item/clothing/shoes/magboots/advance
+
+	backpack_contents = list(
+		/obj/item/grenade/chem_grenade/antiweed = 4
+	)
+
+	cybernetic_implants = list(
+		/obj/item/organ/internal/cyberimp/arm/botanical,
 		/obj/item/organ/internal/cyberimp/brain/anti_stun/hardened
 	)
 

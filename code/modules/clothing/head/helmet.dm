@@ -298,5 +298,11 @@
 //Janitorial
 /obj/item/clothing/head/helmet/ert/janitor
 	name = "emergency response team janitor helmet"
-	desc = "A set of armor worn by janitorial members of the Nanotrasen Emergency Response Team. Has red and white highlights."
+	desc = "A set of armor worn by janitorial members of the Nanotrasen Emergency Response Team. Has purple highlights."
 	icon_state = "erthelmet_jan"
+
+//Botanical
+/obj/item/clothing/head/helmet/ert/botanic
+	name = "emergency response team botanic helmet"
+	desc = "A set of armor worn by botanical members of the Nanotrasen Emergency Response Team. Has green highlights."
+	icon_state = "erthelmet_btn"

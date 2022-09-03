@@ -6,6 +6,7 @@
 	var/medical_slots = 0
 	var/engineering_slots = 0
 	var/janitor_slots = 0
+	var/botanic_slots = 0
 	var/paranormal_slots = 0
 	var/cyborg_slots = 0
 
@@ -34,9 +35,10 @@
 	data["med"] = medical_slots
 	data["eng"] = engineering_slots
 	data["jan"] = janitor_slots
+	data["btn"] = botanic_slots
 	data["par"] = paranormal_slots
 	data["cyb"] = cyborg_slots
-	data["total"] = commander_slots + security_slots + medical_slots + engineering_slots + janitor_slots + paranormal_slots + cyborg_slots
+	data["total"] = commander_slots + security_slots + medical_slots + engineering_slots + janitor_slots + botanic_slots + paranormal_slots + cyborg_slots
 	data["spawnpoints"] = GLOB.emergencyresponseteamspawn.len
 	return data
 
@@ -57,6 +59,8 @@
 			engineering_slots = text2num(params["set_eng"])
 		if("set_jan")
 			janitor_slots = text2num(params["set_jan"])
+		if("set_btn")
+			janitor_slots = text2num(params["set_btn"])
 		if("set_par")
 			paranormal_slots = text2num(params["set_par"])
 		if("set_cyb")
@@ -85,6 +89,8 @@
 				slots_list += "engineering: [engineering_slots]"
 			if(janitor_slots > 0)
 				slots_list += "janitor: [janitor_slots]"
+			if(botanic_slots > 0)
+				slots_list += "botanic: [janitor_slots]"
 			if(paranormal_slots > 0)
 				slots_list += "paranormal: [paranormal_slots]"
 			if(cyborg_slots > 0)

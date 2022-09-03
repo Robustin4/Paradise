@@ -104,6 +104,18 @@ export const ERTManager = (props, context) => {
                 />
               ))}
             </LabeledList.Item>
+            <LabeledList.Item label="Botanic">
+              {slotOptions.map((a, i) => (
+                <Button
+                  key={"btn" + a}
+                  selected={data.jan === a}
+                  content={a}
+                  onClick={() => act('set_btn', {
+                    set_btn: a,
+                  })}
+                />
+              ))}
+            </LabeledList.Item>
             <LabeledList.Item label="Cyborg">
               {slotOptions.map((a, i) => (
                 <Button

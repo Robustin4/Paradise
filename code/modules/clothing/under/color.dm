@@ -128,7 +128,7 @@
 	item_state = "p_suit"
 	item_color = "purple"
 
-/obj/item/clothing/under/color/purple/sensor	//for jani ert
+/obj/item/clothing/under/color/purple/sensor	//for jani ert //robustin4 why the fuck this. why not janitor uniform??
 	sensor_mode = SENSOR_COORDS
 	random_sensor = FALSE
 
