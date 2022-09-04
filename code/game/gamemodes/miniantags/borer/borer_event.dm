@@ -4,11 +4,13 @@
 	announceWhen = 400
 
 	var/spawncount = 5
+	var/headslug
 	var/successSpawn = FALSE        //So we don't make a command report if nothing gets spawned.
 
 /datum/event/borer_infestation/setup()
 	announceWhen = rand(announceWhen, announceWhen + 50)
-	spawncount = rand(2, 3)
+	spawncount = rand(2, 4)
+	headslug = rand(0, 1) //это мидраунд генокрад. конечно же он бдует редок
 
 /datum/event/borer_infestation/announce()
 	if(successSpawn)
@@ -23,3 +25,12 @@
 		new /mob/living/simple_animal/borer(vent.loc)
 		successSpawn = TRUE
 		spawncount--
+
+	if(headslug == 1)
+		var/list/availableareas = list()
+		for(var/area/maintenance/A in world)
+			availableareas += A
+		var/obj/vent = pick_n_take(vents in availableareas)
+		var/mob/living/simple_animal/hostile/headslug/headslug = new /mob/living/simple_animal/hostile/headslug(vent.loc)
+		headslug.ghost_join = TRUE
+		notify_ghosts("A headslug has been appeared in [get_area(headslug)]!", enter_link = "<a href=?src=[UID()];ghostjoin=1>(Click to enter)</a>", source = src, action = NOTIFY_ATTACK)
