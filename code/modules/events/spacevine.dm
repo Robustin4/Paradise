@@ -1074,7 +1074,7 @@
 /mob/camera/vine/verb/new_council()
 	set category = "Vine"
 	set name = "New Root Council(400)"
-	set desc = "Making an another sentient Root Concil if someone want it and only one once. He cant split..."
+	set desc = "Making an another sentient Root Concil if someone want it and only one once. He cant split and have same central vine as you..."
 
 	var/cost = 400
 
