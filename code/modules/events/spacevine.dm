@@ -4,6 +4,9 @@
 #define	MINOR_NEGATIVE		3
 
 /datum/event/spacevine/start()
+
+	processing = 0
+
 	var/list/turfs = list() //list of all the empty floor turfs in the hallway areas
 
 	var/obj/structure/spacevine/SV = new()
@@ -13,11 +16,61 @@
 			if(F.Enter(SV))
 				turfs += F
 
+	for(var/area/crew_quarters/sleep/A2 in world)
+		for(var/turf/F in A2)
+			if(F.Enter(SV))
+				turfs += F
+
+	for(var/area/crew_quarters/locker/A3 in world)
+		for(var/turf/F in A3)
+			if(F.Enter(SV))
+				turfs += F
+
+	for(var/area/bridge/vip/A4 in world)
+		for(var/turf/F in A4)
+			if(F.Enter(SV))
+				turfs += F
+
+	for(var/area/medical/research/A5 in world)
+		for(var/turf/F in A5)
+			if(F.Enter(SV))
+				turfs += F
+
+	for(var/area/security/permahallway/A6 in world)
+		for(var/turf/F in A6)
+			if(F.Enter(SV))
+				turfs += F
+
+	for(var/area/security/securehallway/A7 in world)
+		for(var/turf/F in A7)
+			if(F.Enter(SV))
+				turfs += F
+
+	for(var/area/medical/medbay/A8 in world)
+		for(var/turf/F in A8)
+			if(F.Enter(SV))
+				turfs += F
+
+	for(var/area/medical/medbay2/A9 in world)
+		for(var/turf/F in A9)
+			if(F.Enter(SV))
+				turfs += F
+
+	for(var/area/medical/virology/A10 in world)
+		for(var/turf/F in A10)
+			if(F.Enter(SV))
+				turfs += F
+
 	qdel(SV)
 
 	if(turfs.len) //Pick a turf to spawn at if we can
 		var/turf/T = pick(turfs)
+
 		var/obj/structure/spacevine_controller/SC = new /obj/structure/spacevine_controller(T, , rand(30,70),rand(5,2)) //spawn a controller at turf
+
+		notify_ghosts("Лоза выросла в [get_area(T)].", source = SV, action = NOTIFY_FOLLOW)
+		message_admins("Spacevine has been spawned in [T.loc.name] [ADMIN_COORDJMP(T)] ")
+		log_game("Spacevine has been spawned in [T.loc.name] [COORD(T)] ")
 
 		// Make the event start fun - give the vine a random hostile mutation
 		if(SC.vines.len)
@@ -31,6 +84,21 @@
 			mutations.Cut()
 			mutations = null
 
+		var/list/candidates = SSghost_spawns.poll_candidates("Вы хотите занять роль Лозы?", ROLE_BLOB, TRUE , 15 SECONDS)
+
+		var/mob/candidate = pick(candidates)
+
+		if(candidate)
+			var/mob/camera/vine/cam = new /mob/camera/vine(T)
+			cam.central_vine = SV
+			cam.init = FALSE
+			cam.key = candidate.key
+			SV.tied_to_cam = cam
+			message_admins("[key_name_admin(cam)] выбран на роль Лозы по событию.")
+			log_game("[key_name_admin(cam)] выбран на роль Лозы по событию.")
+		else
+			message_admins("Никто не был выбран на роль Лозы по событию.")
+			log_game("Никто не был выбран на роль Лозы по событию.")
 
 /datum/spacevine_mutation
 	var/name = ""
@@ -336,8 +404,13 @@
 	severity = 10
 
 /datum/spacevine_mutation/flowering/on_grow(obj/structure/spacevine/holder)
-	if(holder.energy == 2 && prob(severity) && !locate(/obj/structure/alien/resin/flower_bud_enemy) in range(5,holder))
-		new /obj/structure/alien/resin/flower_bud_enemy(get_turf(holder))
+	if(holder.energy == 2 && prob(severity) && !locate(/obj/structure/alien/resin/flower_bud_enemy || /obj/structure/alien/resin/flower_bud || /obj/structure/alien/resin/giant_tomato) in range(6,holder))
+		if(prob(44))
+			new /obj/structure/alien/resin/flower_bud_enemy(get_turf(holder))
+		else if(prob(77))
+			new /obj/structure/alien/resin/giant_tomato(get_turf(holder))
+		else
+			new /obj/structure/alien/resin/flower_bud(get_turf(holder))
 
 /datum/spacevine_mutation/flowering/on_cross(obj/structure/spacevine/holder, mob/living/crosser)
 	if(prob(25))
@@ -417,6 +490,10 @@
 	var/energy = 0
 	var/obj/structure/spacevine_controller/master = null
 	var/list/mutations = list()
+	var/tied_to_cam = null
+
+/obj/structure/spacevine/blob_act(obj/structure/spacevine)
+	return
 
 /obj/structure/spacevine/Initialize(mapload)
 	. = ..()
@@ -455,6 +532,7 @@
 	master = null
 	mutations.Cut()
 	set_opacity(0)
+	qdel(tied_to_cam)
 	if(has_buckled_mobs())
 		unbuckle_all_mobs(force = TRUE)
 	return ..()
@@ -703,3 +781,321 @@
 		var/mob/living/M = A
 		if(("vines" in M.faction) || ("plants" in M.faction))
 			. = TRUE
+
+/obj/structure/spacevine/attack_animal(mob/living/simple_animal/M)
+	if("vines" in M.faction)
+		return
+	..()
+
+/mob/camera/vine
+	name = "Spacevine The Root Council"
+	real_name = "Spacevine The Root Council"
+	icon = 'icons/effects/spacevines.dmi'
+	icon_state = "marker"
+
+	//invisibility = INVISIBILITY_OBSERVER
+	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
+	see_in_dark = 9999
+	sight = SEE_MOBS | SEE_SELF | SEE_TURFS | SEE_OBJS
+
+	faction = list("hostile","vines","plants")
+
+	var/obj/structure/spacevine/central_vine = null // first vine structure
+	var/vine_points = 100
+	var/max_vine_points = 400
+	var/init = TRUE
+	var/splited = FALSE
+	//var/datum/spacevine_mutation/vine_mutation
+
+/mob/camera/vine/New()
+	..()
+
+	add_language("Root Connection")
+
+	var/new_name = "[initial(name)] ([rand(1, 999)])"
+	name = new_name
+	real_name = new_name
+
+	var/time = rand(10,100)
+
+	addtimer(CALLBACK(src, .proc/add_points), time)
+
+/mob/camera/vine/Destroy()
+	STOP_PROCESSING(SSobj, src)
+	return ..()
+
+/mob/camera/vine/proc/add_points()
+
+	var/how_many_points_to_add = rand(0,40)
+
+	if(how_many_points_to_add + vine_points > 400)
+		how_many_points_to_add = 0
+		var/a = vine_points
+		a -= 400
+		vine_points -= a
+
+	while(how_many_points_to_add > 0)
+		how_many_points_to_add--
+		vine_points++
+
+	again_points()
+
+/mob/camera/vine/proc/again_points()
+
+	var/time = rand(10,100)
+
+	sleep(time)
+
+	add_points()
+
+/mob/camera/vine/process()
+	if(!central_vine)
+		qdel(src)
+
+/mob/camera/vine/Login()
+	..()
+
+	sync_mind()
+
+/*
+	update_health_hud()
+
+/mob/camera/vine/update_health_hud()
+	if(central_vine && hud_used)
+		hud_used.vinehealthdisplay.maptext = "<div align='center' valign='middle' style='position:relative; top:0px; left:6px'><font color='#e36600'>[round(central_vine.obj_integrity)]</font></div>"
+*/
+
+/*
+
+/mob/camera/vine/proc/add_points(var/points)
+	points = rand(0,4)
+	vine_points = clamp(vine_points + points, 0, max_vine_points)
+		//if(hud_used)
+			//hud_used.blobpwrdisplay.maptext = "<div align='center' valign='middle' style='position:relative; top:0px; left:6px'><font color='#82ed00'>[round(src.blob_points)]</font></div>"
+
+*/
+
+/mob/camera/vine/say(var/message)
+	if(!message)
+		return
+
+	if(src.client)
+		if(client.prefs.muted & MUTE_IC)
+			to_chat(src, "You cannot send IC messages (muted).")
+			return
+		if(src.client.handle_spam_prevention(message,MUTE_IC))
+			return
+
+	if(stat)
+		return
+
+	vine_talk(message)
+
+/mob/camera/vine/proc/vine_talk(message)
+	log_say("(Vine) [message]", src)
+
+	message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN))
+
+	if(!message)
+		return
+
+	var/verb = "states,"
+	var/rendered = "<font color=\"#006400\"><i><span class='game say'>Root Connection, <span class='name'>[name]</span> <span class='message'>[verb] <b>\"[message]\"</b></span></span></i></font>"
+
+	for(var/mob/M in GLOB.mob_list)
+		if(isvinecouncil(M) || isobserver(M))
+			if(("vines" in M.faction))
+				M.show_message(rendered, 2)
+
+/mob/camera/vine/emote(act, m_type = 1, message = null, force)
+	return
+
+/mob/camera/vine/blob_act(obj/structure/spacevine)
+	return
+
+/mob/camera/vine/Stat()
+	..()
+	if(statpanel("Status"))
+		stat(null, "Space-o-synthesis points Stored: [src.vine_points]/[src.max_vine_points]")
+
+/mob/camera/vine/Move(atom/destination)
+
+	if(world.time < last_movement)
+		return
+	last_movement = world.time + 0.2 // cap to idk fps
+
+	var/obj/structure/spacevine/sv = locate() in range("10x10", destination)
+	if(sv)
+		var/oldloc = loc
+		loc = destination
+		Moved(oldloc, NONE)
+	else
+		return 0
+
+/mob/camera/vine/verb/transport_central_vine()
+	set category = "Vine"
+	set name = "Jump to Central Vine"
+	set desc = "Transport back to your central vine."
+
+	if(central_vine)
+		src.loc = central_vine.loc
+
+/mob/camera/vine/verb/expand_vine()
+	set category = "Vine"
+	set name = "Expand Vine (40)"
+	set desc = "Attempts to create a new vine in this tile."
+
+	var/turf/T = get_turf(src)
+
+	var/cost = 40
+
+	if(vine_points >= cost)
+		vine_points -= cost
+	else
+		return
+
+	if(!locate(/obj/structure/spacevine, T))
+		// var/obj/structure/spacevine/vine = new /obj/structure/spacevine(T)
+
+		for(var/obj/structure/spacevine/SV in range(src, 4))
+			for(var/datum/spacevine_mutation/SM in SV.mutations)
+				SM.process_mutation(SV)
+				//SV.grow()
+				SV.spread()
+
+/mob/camera/vine/verb/grow_vine()
+	set category = "Vine"
+	set name = "Grow Vine (25)"
+	set desc = "Attempts to grow vine in this tile."
+
+	var/turf/T = get_turf(src)
+
+	var/cost = 25
+
+	if(vine_points >= cost)
+		vine_points -= cost
+	else
+		return
+
+	if(!locate(/obj/structure/spacevine, T))
+		// var/obj/structure/spacevine/vine = new /obj/structure/spacevine(T)
+
+		for(var/obj/structure/spacevine/SV in range(src, 4))
+			for(var/datum/spacevine_mutation/SM in SV.mutations)
+				SM.process_mutation(SV)
+				SV.grow()
+				//SV.spread()
+
+/mob/camera/vine/verb/destroy_objects()
+	set category = "Vine"
+	set name = "Destroy Objects (25)"
+	set desc = "Attempts to destroy objects in this tile."
+
+	var/cost = 25
+
+	var/radius = 2
+
+	var/dmg = 0.2
+
+	if(vine_points >= cost)
+		vine_points -= cost
+	else
+		return
+
+	for(var/obj/structure/str in range(src, radius))
+		str -= /obj/structure/spacevine
+		str -= /obj/structure/spacevine_controller
+		str.ex_act(dmg)
+
+	for(var/obj/machinery/mcha in range(src, radius))
+		mcha.ex_act(dmg)
+
+	for(var/obj/spacepod/sp in range(src, radius))
+		sp.ex_act(dmg)
+
+	for(var/obj/vehicle/vh in range(src, radius))
+		vh.ex_act(dmg)
+
+
+/mob/camera/vine/verb/create_tomato()
+	set category = "Vine"
+	set name = "Create tomato(20)"
+	set desc = "Making a fast growing and walking minion. He's weak."
+
+	var/cost = 20
+
+	if(vine_points >= cost)
+		vine_points -= cost
+		new /obj/structure/alien/resin/giant_tomato(src.loc)
+
+/mob/camera/vine/verb/create_venus()
+	set category = "Vine"
+	set name = "Create venus human trap(60)"
+	set desc = "Making an average minion."
+
+	var/cost = 60
+
+	if(vine_points >= cost)
+		vine_points -= cost
+		new /obj/structure/alien/resin/flower_bud_enemy(src.loc)
+
+/mob/camera/vine/verb/create_red_piranha()
+	set category = "Vine"
+	set name = "Create venus red piranha(80)"
+	set desc = "Making a very strong, but slow minion."
+
+	var/cost = 80
+
+	if(vine_points >= cost)
+		vine_points -= cost
+		new /obj/structure/alien/resin/flower_bud(src.loc)
+
+/mob/camera/vine/verb/rally_thorns()
+	set category = "Vine"
+	set name = "Attack this point order"
+	set desc = "Sending your not sentient minions attack position of your location."
+
+	var/turf/T = get_turf(src)
+	rally_thorns_proc(T)
+
+/mob/camera/vine/proc/rally_thorns_proc(var/turf/T)
+	to_chat(src, "You rally your thorns.")
+
+	var/list/surrounding_turfs = block(locate(T.x - 1, T.y - 1, T.z), locate(T.x + 1, T.y + 1, T.z))
+	if(!surrounding_turfs.len)
+		return
+
+	for(var/mob/living/simple_animal/hostile/VineMinion in GLOB.alive_mob_list)
+		if(isturf(VineMinion.loc) && get_dist(VineMinion, T) <= 40 && ("vines" in VineMinion.faction) && !VineMinion.key)
+			VineMinion.LoseTarget()
+			VineMinion.Goto(pick(surrounding_turfs), VineMinion.move_to_delay)
+	return
+
+/mob/camera/vine/verb/new_council()
+	set category = "Vine"
+	set name = "New Root Council(400)"
+	set desc = "Making an another sentient Root Concil if someone want it and only one once. He cant split..."
+
+	var/cost = 400
+
+	to_chat(src, "Waiting for soul in 15 seconds. Dont do things to make your points lower 400.")
+
+	if(vine_points < cost || splited)
+		return
+
+	var/list/candidates = SSghost_spawns.poll_candidates("Вы хотите занять роль Лозы?", ROLE_BLOB, TRUE , 15 SECONDS)
+
+	var/mob/candidate = pick(candidates)
+
+	if(candidate && vine_points >= cost)
+		var/turf/T = get_turf(src)
+		var/mob/camera/vine/cam = new /mob/camera/vine(T)
+		splited = TRUE
+		cam.central_vine = src.central_vine
+		vine_points -= cost
+		to_chat(src, "A new Root Council was created.")
+		cam.init = FALSE
+		cam.splited = TRUE
+		cam.key = candidate.key
+		message_admins("[key_name_admin(cam)] выбран на роль Лозы при разделении.")
+		log_game("[key_name_admin(cam)] выбран на роль Лозы при разделении.")

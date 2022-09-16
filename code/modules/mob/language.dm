@@ -497,6 +497,17 @@
 	flags = RESTRICTED | HIVEMIND | NOBABEL
 	follow = TRUE
 
+/datum/language/spacevine
+	name = "Root Connection"
+	desc = "Plants of spacevine has an ability to communicate inside their vine or between them like an one mind."
+	speech_verb = "creaks"
+	ask_verb = "creaks"
+	exclaim_verbs = list("creaks")
+	colour = "spacevinemind"
+	key = "sv"
+	flags = RESTRICTED | HIVEMIND | NOBABEL
+	follow = TRUE
+
 /datum/language/ling
 	name = "Changeling"
 	desc = "Although they are normally wary and suspicious of each other, changelings can commune over a distance."

@@ -240,6 +240,7 @@
 
 #define isAIEye(A)		(istype((A), /mob/camera/aiEye))
 #define isovermind(A)	(istype((A), /mob/camera/blob))
+#define isvinecouncil(A)	(istype((A), /mob/camera/vine))
 
 #define isSpirit(A)		(istype((A), /mob/spirit))
 #define ismask(A)		(istype((A), /mob/spirit/mask))
