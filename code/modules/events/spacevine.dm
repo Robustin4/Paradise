@@ -793,7 +793,7 @@
 	icon = 'icons/effects/spacevines.dmi'
 	icon_state = "marker"
 
-	//invisibility = INVISIBILITY_OBSERVER
+	invisibility = INVISIBILITY_OBSERVER
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	see_in_dark = 9999
 	sight = SEE_MOBS | SEE_SELF | SEE_TURFS | SEE_OBJS
@@ -995,7 +995,7 @@
 
 	var/radius = 2
 
-	var/dmg = 0.2
+	var/dmg = 0.1
 
 	if(vine_points >= cost)
 		vine_points -= cost
