@@ -18,6 +18,7 @@
 #define ROLE_PAI				"pAI"
 #define ROLE_CULTIST			"cultist"
 #define ROLE_BLOB				"blob"
+#define ROLE_SPACEVINE		"space vine"
 #define ROLE_NINJA				"space ninja"
 #define ROLE_MONKEY				"monkey"
 #define ROLE_GANG				"gangster"
@@ -67,6 +68,7 @@ GLOBAL_LIST_INIT(special_roles, list(
 	ROLE_SHADOWLING = /datum/game_mode/shadowling, 		// Shadowling
 	ROLE_DEMON, 										// Slaguther demon
 	ROLE_NINJA, 										// Space ninja
+	ROLE_SPACEVINE, 									// Space vine
 	ROLE_TRADER, 										// Trader
 	ROLE_TRAITOR = /datum/game_mode/traitor, 			// Traitor
 	ROLE_VAMPIRE = /datum/game_mode/vampire, 			// Vampire

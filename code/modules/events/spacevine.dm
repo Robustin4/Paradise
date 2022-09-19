@@ -3,6 +3,10 @@
 #define	NEGATIVE			2
 #define	MINOR_NEGATIVE		3
 
+/datum/event/spacevine
+	announceWhen = 90
+	endWhen = 150
+
 /datum/event/spacevine/start()
 
 	processing = 0
@@ -84,7 +88,7 @@
 			mutations.Cut()
 			mutations = null
 
-		var/list/candidates = SSghost_spawns.poll_candidates("Вы хотите занять роль Лозы?", ROLE_BLOB, TRUE , 15 SECONDS)
+		var/list/candidates = SSghost_spawns.poll_candidates("Вы хотите занять роль Лозы?", ROLE_SPACEVINE, TRUE , 15 SECONDS)
 
 		var/mob/candidate = pick(candidates)
 
@@ -99,6 +103,9 @@
 		else
 			message_admins("Никто не был выбран на роль Лозы по событию.")
 			log_game("Никто не был выбран на роль Лозы по событию.")
+
+/datum/event/spacevine/announce()
+	GLOB.event_announcement.Announce("Вспышка биологической угрозы 7-го уровня зафиксирована на борту станции [station_name()]. Всему персоналу надлежит сдержать ее распространение любой ценой!", "ВНИМАНИЕ: БИОЛОГИЧЕСКАЯ УГРОЗА", 'sound/AI/outbreak7.ogg')
 
 /datum/spacevine_mutation
 	var/name = ""
@@ -830,9 +837,16 @@
 
 	if(how_many_points_to_add + vine_points > 400)
 		how_many_points_to_add = 0
+		vine_points = 400
+/*
+
+	if(how_many_points_to_add + vine_points > 400)
+		how_many_points_to_add = 0
 		var/a = vine_points
 		a -= 400
 		vine_points -= a
+
+*/
 
 	while(how_many_points_to_add > 0)
 		how_many_points_to_add--
@@ -1083,7 +1097,7 @@
 	if(vine_points < cost || splited)
 		return
 
-	var/list/candidates = SSghost_spawns.poll_candidates("Вы хотите занять роль Лозы?", ROLE_BLOB, TRUE , 15 SECONDS)
+	var/list/candidates = SSghost_spawns.poll_candidates("Вы хотите занять роль Лозы?", ROLE_SPACEVINE, TRUE , 15 SECONDS)
 
 	var/mob/candidate = pick(candidates)
 
@@ -1097,5 +1111,6 @@
 		cam.init = FALSE
 		cam.splited = TRUE
 		cam.key = candidate.key
+		src.central_vine.tied_to_cam = cam
 		message_admins("[key_name_admin(cam)] выбран на роль Лозы при разделении.")
 		log_game("[key_name_admin(cam)] выбран на роль Лозы при разделении.")
