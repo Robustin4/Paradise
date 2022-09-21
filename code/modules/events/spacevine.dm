@@ -1009,7 +1009,7 @@
 
 	var/radius = 2
 
-	var/dmg = 0.1
+	var/dmg = 1
 
 	if(vine_points >= cost)
 		vine_points -= cost
@@ -1080,7 +1080,7 @@
 		return
 
 	for(var/mob/living/simple_animal/hostile/VineMinion in GLOB.alive_mob_list)
-		if(isturf(VineMinion.loc) && get_dist(VineMinion, T) <= 40 && ("vines" in VineMinion.faction) && !VineMinion.key)
+		if(isturf(VineMinion.loc) && get_dist(VineMinion, T) <= 60 && ("vines" in VineMinion.faction) && !VineMinion.key)
 			VineMinion.LoseTarget()
 			VineMinion.Goto(pick(surrounding_turfs), VineMinion.move_to_delay)
 	return
