@@ -72,9 +72,10 @@
 	name += " ([rand(1, 1000)])"
 	real_name = name
 
-/mob/living/simple_animal/hostile/killertomato/spacevine/death()
-	addtimer(CALLBACK(src, .proc/gibbo), rand(20,40))
+/mob/living/simple_animal/hostile/killertomato/spacevine/death(gibbed)
+	..()
 
+	addtimer(CALLBACK(src, .proc/gibbo), rand(100,200))
 
 /mob/living/simple_animal/hostile/killertomato/spacevine/proc/gibbo()
 	..()
@@ -119,11 +120,15 @@
 	canSmoothWith = list()
 	smooth = SMOOTH_FALSE
 	var/growth_time = 600
+	var/vine_spawned = FALSE
 
 /obj/structure/alien/resin/giant_tomato/New()
 	..()
 
-	addtimer(CALLBACK(src, .proc/bear_fruit), growth_time)
+	if(!vine_spawned)
+		addtimer(CALLBACK(src, .proc/bear_fruit), growth_time)
+	else
+		addtimer(CALLBACK(src, .proc/bear_fruit), growth_time - 400)
 
 /obj/structure/alien/resin/giant_tomato/proc/bear_fruit()
 
@@ -138,4 +143,4 @@
 			adjustBruteLoss(-2)
 			adjustFireLoss(-2)
 			if(on_fire)
-				adjust_fire_stacks(-2)	// Slowly extinguish the flames
+				adjust_fire_stacks(-10)	// Slowly extinguish the flames

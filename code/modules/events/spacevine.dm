@@ -65,12 +65,21 @@
 			if(F.Enter(SV))
 				turfs += F
 
+	for(var/area/quartermaster/storage/A11 in world)
+		for(var/turf/F in A11)
+			if(F.Enter(SV))
+				turfs += F
+
 	qdel(SV)
 
 	if(turfs.len) //Pick a turf to spawn at if we can
 		var/turf/T = pick(turfs)
 
 		var/obj/structure/spacevine_controller/SC = new /obj/structure/spacevine_controller(T, , rand(30,70),rand(5,2)) //spawn a controller at turf
+
+		new /mob/living/simple_animal/hostile/killertomato/spacevine(T)
+		new /mob/living/simple_animal/hostile/venus_human_trap(T)
+		new /mob/living/simple_animal/hostile/venus_human_trap/red_piranha(T) // protectors for the first time
 
 		notify_ghosts("Лоза выросла в [get_area(T)].", source = SV, action = NOTIFY_FOLLOW)
 		message_admins("Spacevine has been spawned in [T.loc.name] [ADMIN_COORDJMP(T)] ")
@@ -88,7 +97,7 @@
 			mutations.Cut()
 			mutations = null
 
-		var/list/candidates = SSghost_spawns.poll_candidates("Вы хотите занять роль Лозы?", ROLE_SPACEVINE, TRUE , 15 SECONDS)
+		var/list/candidates = SSghost_spawns.poll_candidates("Вы хотите занять роль Лозы?", ROLE_SPACEVINE, TRUE, 15 SECONDS)
 
 		var/mob/candidate = pick(candidates)
 
@@ -936,9 +945,9 @@
 
 	if(world.time < last_movement)
 		return
-	last_movement = world.time + 0.2 // cap to idk fps
+	last_movement = world.time + 0.26 // cap to idk fps
 
-	var/obj/structure/spacevine/sv = locate() in range("10x10", destination)
+	var/obj/structure/spacevine/sv = locate() in range("12x12", destination)
 	if(sv)
 		var/oldloc = loc
 		loc = destination
@@ -1007,9 +1016,9 @@
 
 	var/cost = 25
 
-	var/radius = 2
+	var/radius = 4
 
-	var/dmg = 1
+	var/dmg = 1.5
 
 	if(vine_points >= cost)
 		vine_points -= cost
@@ -1040,7 +1049,8 @@
 
 	if(vine_points >= cost)
 		vine_points -= cost
-		new /obj/structure/alien/resin/giant_tomato(src.loc)
+		var/obj/structure/alien/resin/giant_tomato/tomato = new /obj/structure/alien/resin/giant_tomato(src.loc)
+		tomato.vine_spawned = TRUE
 
 /mob/camera/vine/verb/create_venus()
 	set category = "Vine"
@@ -1051,7 +1061,8 @@
 
 	if(vine_points >= cost)
 		vine_points -= cost
-		new /obj/structure/alien/resin/flower_bud_enemy(src.loc)
+		var/obj/structure/alien/resin/flower_bud_enemy/bud = new /obj/structure/alien/resin/flower_bud_enemy(src.loc)
+		bud.vine_spawned = TRUE
 
 /mob/camera/vine/verb/create_red_piranha()
 	set category = "Vine"
@@ -1062,7 +1073,8 @@
 
 	if(vine_points >= cost)
 		vine_points -= cost
-		new /obj/structure/alien/resin/flower_bud(src.loc)
+		var/obj/structure/alien/resin/flower_bud/budd = new /obj/structure/alien/resin/flower_bud(src.loc)
+		budd.vine_spawned = TRUE
 
 /mob/camera/vine/verb/rally_thorns()
 	set category = "Vine"
@@ -1092,7 +1104,7 @@
 
 	var/cost = 400
 
-	to_chat(src, "Waiting for soul in 15 seconds. Dont do things to make your points lower 400.")
+	to_chat(src, "Waiting for a soul in 15 seconds. Dont do things to make your points lower 400.")
 
 	if(vine_points < cost || splited)
 		return

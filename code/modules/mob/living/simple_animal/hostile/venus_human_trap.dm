@@ -10,6 +10,7 @@
 	canSmoothWith = list()
 	smooth = SMOOTH_FALSE
 	var/growth_time = 1200
+	var/vine_spawned = FALSE
 
 /obj/structure/alien/resin/flower_bud_enemy/New()
 	..()
@@ -22,7 +23,10 @@
 	for(var/turf/T in anchors)
 		var/datum/beam/B = Beam(T, "vine", time=INFINITY, maxdistance=5, beam_type=/obj/effect/ebeam/vine)
 		B.sleep_time = 10 //these shouldn't move, so let's slow down updates to 1 second (any slower and the deletion of the vines would be too slow)
-	addtimer(CALLBACK(src, .proc/bear_fruit), growth_time)
+	if(!vine_spawned)
+		addtimer(CALLBACK(src, .proc/bear_fruit), growth_time)
+	else
+		addtimer(CALLBACK(src, .proc/bear_fruit), growth_time - 600)
 
 /obj/structure/alien/resin/flower_bud_enemy/proc/bear_fruit()
 
@@ -40,7 +44,7 @@
 	if(isliving(AM))
 		var/mob/living/L = AM
 		if(!("vines" in L.faction))
-			L.adjustBruteLoss(5)
+			L.adjustBruteLoss(10)
 			to_chat(L, "<span class='alert'>You cut yourself on the thorny vines.</span>")
 
 /mob/living/simple_animal/hostile/venus_human_trap
@@ -163,6 +167,7 @@
 	smooth = SMOOTH_FALSE
 	var/growth_time = 2400
 	var/growth_icon = 0
+	var/vine_spawned = FALSE
 
 	/// Used by countdown to check time, this is when the timer will complete and the venus trap will spawn.
 	var/finish_time
@@ -181,8 +186,13 @@
 	for(var/turf/T in anchors)
 		vines += Beam(T, "vine", maxdistance=5, beam_type=/obj/effect/ebeam/vine)
 	finish_time = world.time + growth_time
-	addtimer(CALLBACK(src, .proc/bear_fruit), growth_time)
-	addtimer(CALLBACK(src, .proc/progress_growth), growth_time/4)
+
+	if(!vine_spawned)
+		addtimer(CALLBACK(src, .proc/bear_fruit), growth_time)
+		addtimer(CALLBACK(src, .proc/progress_growth), growth_time/4)
+	else
+		addtimer(CALLBACK(src, .proc/bear_fruit), growth_time - 1200)
+		addtimer(CALLBACK(src, .proc/progress_growth), growth_time/8)
 
 /obj/structure/alien/resin/flower_bud/Destroy()
 	QDEL_LIST(vines)
@@ -210,8 +220,8 @@
 	desc = "This thing can eat even a cow."
 	icon_state = "venus_red_piranha"
 	layer = MOB_LAYER + 0.9
-	health = 265
-	maxHealth = 265
+	health = 286
+	maxHealth = 286
 	ranged = 0
 	harm_intent_damage = 2
 	obj_damage = 146
@@ -230,7 +240,7 @@
 	turns_per_move = 6
 	move_to_delay = 8
 	robust_searching = 1
-	ventcrawler = 0
+	ventcrawler = 2
 	environment_smash = 3
 	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	unsuitable_atmos_damage = 0
@@ -248,7 +258,7 @@
 			adjustBruteLoss(-0.80)
 			adjustFireLoss(-0.80)
 			if(on_fire)
-				adjust_fire_stacks(-2)	// Slowly extinguish the flames
+				adjust_fire_stacks(-4)// lowly extinguish the flames
 
 /mob/living/simple_animal/hostile/venus_human_trap/red_piranha/Life(seconds, times_fired)
 
@@ -257,7 +267,7 @@
 			adjustBruteLoss(-0.60)
 			adjustFireLoss(-0.60)
 			if(on_fire)
-				adjust_fire_stacks(-4)	// Slowly extinguish the flames
+				adjust_fire_stacks(-2) // Slowly extinguish the flames
 
 /mob/living/simple_animal/hostile/venus_human_trap/attack_ghost(mob/user)
 	humanize_plant(user)
