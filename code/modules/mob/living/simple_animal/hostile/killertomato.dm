@@ -44,7 +44,7 @@
 	pressure_resistance = 50
 	see_in_dark = 6
 	obj_damage = 30
-	speed = 0.45
+	speed = 0.40
 	a_intent = INTENT_HARM
 	environment_smash = 1
 	butcher_results = list(/obj/item/reagent_containers/food/snacks/tomatomeat = 2)
@@ -75,7 +75,7 @@
 /mob/living/simple_animal/hostile/killertomato/spacevine/death(gibbed)
 	..()
 
-	addtimer(CALLBACK(src, .proc/gibbo), rand(100,200))
+	addtimer(CALLBACK(src, .proc/gibbo), rand(20,40))
 
 /mob/living/simple_animal/hostile/killertomato/spacevine/proc/gibbo()
 	..()
@@ -98,7 +98,7 @@
 	else if(stat == DEAD)
 		return
 
-	if(jobban_isbanned(user, "Syndicate"))
+	if(jobban_isbanned(user, "Syndicate") || jobban_isbanned(user, "Space Vine"))
 		to_chat(user,"You are jobbanned from role of syndicate and/or alien lifeform.")
 		return
 
@@ -128,7 +128,7 @@
 	if(!vine_spawned)
 		addtimer(CALLBACK(src, .proc/bear_fruit), growth_time)
 	else
-		addtimer(CALLBACK(src, .proc/bear_fruit), growth_time - 400)
+		addtimer(CALLBACK(src, .proc/bear_fruit), growth_time - 590)
 
 /obj/structure/alien/resin/giant_tomato/proc/bear_fruit()
 
@@ -140,7 +140,7 @@
 
 	if(stat != DEAD && (getBruteLoss() || getFireLoss())) // Heal on blob structures
 		if(locate(/obj/structure/spacevine || /obj/structure/spacevine_controller) in get_turf(src))
-			adjustBruteLoss(-2)
-			adjustFireLoss(-2)
+			adjustBruteLoss(-1)
+			adjustFireLoss(-1)
 			if(on_fire)
-				adjust_fire_stacks(-10)	// Slowly extinguish the flames
+				adjust_fire_stacks(-6)	// Slowly extinguish the flames

@@ -26,7 +26,7 @@
 	if(!vine_spawned)
 		addtimer(CALLBACK(src, .proc/bear_fruit), growth_time)
 	else
-		addtimer(CALLBACK(src, .proc/bear_fruit), growth_time - 600)
+		addtimer(CALLBACK(src, .proc/bear_fruit), growth_time - 1180)
 
 /obj/structure/alien/resin/flower_bud_enemy/proc/bear_fruit()
 
@@ -65,8 +65,8 @@
 	see_in_dark = 9999
 	sight = SEE_MOBS | SEE_SELF | SEE_TURFS | SEE_OBJS
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
-	melee_damage_lower = 25
-	melee_damage_upper = 25
+	melee_damage_lower = 26
+	melee_damage_upper = 26
 	a_intent = INTENT_HARM
 	turns_per_move = 5
 	move_to_delay = 4
@@ -191,7 +191,7 @@
 		addtimer(CALLBACK(src, .proc/bear_fruit), growth_time)
 		addtimer(CALLBACK(src, .proc/progress_growth), growth_time/4)
 	else
-		addtimer(CALLBACK(src, .proc/bear_fruit), growth_time - 1200)
+		addtimer(CALLBACK(src, .proc/bear_fruit), growth_time - 1260)
 		addtimer(CALLBACK(src, .proc/progress_growth), growth_time/8)
 
 /obj/structure/alien/resin/flower_bud/Destroy()
@@ -220,11 +220,13 @@
 	desc = "This thing can eat even a cow."
 	icon_state = "venus_red_piranha"
 	layer = MOB_LAYER + 0.9
-	health = 286
-	maxHealth = 286
+	health = 146
+	maxHealth = 146
 	ranged = 0
 	harm_intent_damage = 2
-	obj_damage = 146
+	obj_damage = 40
+	force_threshold = 10
+	mob_size = MOB_SIZE_LARGE
 	see_in_dark = 9999
 	sight = SEE_MOBS | SEE_SELF | SEE_TURFS | SEE_OBJS
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
@@ -232,7 +234,8 @@
 	death_sound = 'sound/creatures/venus_trap_death.ogg'
 	attack_sound = 'sound/creatures/venus_trap_hit.ogg'
 	attacktext = "absorbs"
-	speed = 1.65
+	speed = 1.34
+	move_resist = MOVE_FORCE_EXTREMELY_STRONG
 	melee_damage_lower = 20
 	melee_damage_upper = 40
 	pressure_resistance = 50
@@ -282,7 +285,7 @@
 	else if(stat == DEAD)
 		return
 
-	if(jobban_isbanned(user, "Syndicate") )
+	if(jobban_isbanned(user, "Syndicate") || jobban_isbanned(user, "Space Vine"))
 		to_chat(user,"You are jobbanned from role of syndicate and/or alien lifeform.")
 		return
 

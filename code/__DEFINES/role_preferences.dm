@@ -18,7 +18,7 @@
 #define ROLE_PAI				"pAI"
 #define ROLE_CULTIST			"cultist"
 #define ROLE_BLOB				"blob"
-#define ROLE_SPACEVINE		"space vine"
+#define ROLE_SPACEVINE			"space vine"
 #define ROLE_NINJA				"space ninja"
 #define ROLE_MONKEY				"monkey"
 #define ROLE_GANG				"gangster"

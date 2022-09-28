@@ -6,6 +6,7 @@
 /datum/event/spacevine
 	announceWhen = 90
 	endWhen = 150
+	var/successSpawn = FALSE	//So we don't make a command report if nothing gets spawned.
 
 /datum/event/spacevine/start()
 
@@ -75,13 +76,27 @@
 	if(turfs.len) //Pick a turf to spawn at if we can
 		var/turf/T = pick(turfs)
 
+		for(var/obj/structure/grille/grill in T)
+			qdel(grill)
+
+		for(var/obj/structure/window/windo in T)
+			qdel(windo)
+
+		successSpawn = TRUE
+
 		var/obj/structure/spacevine_controller/SC = new /obj/structure/spacevine_controller(T, , rand(30,70),rand(5,2)) //spawn a controller at turf
 
-		new /mob/living/simple_animal/hostile/killertomato/spacevine(T)
-		new /mob/living/simple_animal/hostile/venus_human_trap(T)
-		new /mob/living/simple_animal/hostile/venus_human_trap/red_piranha(T) // protectors for the first time
+		var/mob/living/simple_animal/slave1 = new /mob/living/simple_animal/hostile/killertomato/spacevine(T)
+		var/mob/living/simple_animal/slave2 = new /mob/living/simple_animal/hostile/killertomato/spacevine(T)
+		var/mob/living/simple_animal/slave3 = new /mob/living/simple_animal/hostile/venus_human_trap(T)
+		var/mob/living/simple_animal/slave4 = new /mob/living/simple_animal/hostile/venus_human_trap/red_piranha(T) // protectors for the first time
 
-		notify_ghosts("Лоза выросла в [get_area(T)].", source = SV, action = NOTIFY_FOLLOW)
+		step(slave1, pick(NORTH, SOUTH, EAST, WEST))
+		step(slave2, pick(NORTH, SOUTH, EAST, WEST))
+		step(slave3, pick(NORTH, SOUTH, EAST, WEST))
+		step(slave4, pick(NORTH, SOUTH, EAST, WEST))
+
+		notify_ghosts("Лоза выросла в [get_area(T)].", source = SV, action = NOTIFY_ATTACK)
 		message_admins("Spacevine has been spawned in [T.loc.name] [ADMIN_COORDJMP(T)] ")
 		log_game("Spacevine has been spawned in [T.loc.name] [COORD(T)] ")
 
@@ -96,6 +111,8 @@
 					break
 			mutations.Cut()
 			mutations = null
+
+		sleep(10)
 
 		var/list/candidates = SSghost_spawns.poll_candidates("Вы хотите занять роль Лозы?", ROLE_SPACEVINE, TRUE, 15 SECONDS)
 
@@ -114,7 +131,8 @@
 			log_game("Никто не был выбран на роль Лозы по событию.")
 
 /datum/event/spacevine/announce()
-	GLOB.event_announcement.Announce("Вспышка биологической угрозы 7-го уровня зафиксирована на борту станции [station_name()]. Всему персоналу надлежит сдержать ее распространение любой ценой!", "ВНИМАНИЕ: БИОЛОГИЧЕСКАЯ УГРОЗА", 'sound/AI/outbreak7.ogg')
+	if(successSpawn)
+		GLOB.event_announcement.Announce("Вспышка биологической угрозы 7-го уровня зафиксирована на борту станции [station_name()]. Всему персоналу надлежит сдержать ее распространение любой ценой!", "ВНИМАНИЕ: БИОЛОГИЧЕСКАЯ УГРОЗА", 'sound/AI/outbreak7.ogg')
 
 /datum/spacevine_mutation
 	var/name = ""
@@ -420,7 +438,7 @@
 	severity = 10
 
 /datum/spacevine_mutation/flowering/on_grow(obj/structure/spacevine/holder)
-	if(holder.energy == 2 && prob(severity) && !locate(/obj/structure/alien/resin/flower_bud_enemy || /obj/structure/alien/resin/flower_bud || /obj/structure/alien/resin/giant_tomato) in range(6,holder))
+	if(holder.energy == 2 && prob(severity) && !locate(/obj/structure/alien/resin/flower_bud_enemy || /obj/structure/alien/resin/flower_bud || /obj/structure/alien/resin/giant_tomato) in range(2,holder))
 		if(prob(44))
 			new /obj/structure/alien/resin/flower_bud_enemy(get_turf(holder))
 		else if(prob(77))
@@ -507,6 +525,12 @@
 	var/obj/structure/spacevine_controller/master = null
 	var/list/mutations = list()
 	var/tied_to_cam = null
+
+/obj/structure/spacevine/proc/get_mut()
+
+	var/mutation = pick_n_take(mutations)
+
+	return mutation
 
 /obj/structure/spacevine/blob_act(obj/structure/spacevine)
 	return
@@ -804,14 +828,14 @@
 	..()
 
 /mob/camera/vine
-	name = "Spacevine The Root Council"
-	real_name = "Spacevine The Root Council"
+	name = "The Root Council of Spacevine"
+	real_name = "The Root Council of Spacevine"
 	icon = 'icons/effects/spacevines.dmi'
 	icon_state = "marker"
 
 	invisibility = INVISIBILITY_OBSERVER
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
-	see_in_dark = 9999
+	see_in_dark = 40
 	sight = SEE_MOBS | SEE_SELF | SEE_TURFS | SEE_OBJS
 
 	faction = list("hostile","vines","plants")
@@ -821,7 +845,8 @@
 	var/max_vine_points = 400
 	var/init = TRUE
 	var/splited = FALSE
-	//var/datum/spacevine_mutation/vine_mutation
+	var/datum/spacevine_mutation/vine_mutation
+	var/mutation = ""
 
 /mob/camera/vine/New()
 	..()
@@ -832,9 +857,12 @@
 	name = new_name
 	real_name = new_name
 
-	var/time = rand(10,100)
+	var/time = rand(10,20)
 
 	addtimer(CALLBACK(src, .proc/add_points), time)
+
+	var/datum/atom_hud/hydrosensor = GLOB.huds[DATA_HUD_HYDROPONIC]
+	hydrosensor.add_hud_to(src)
 
 /mob/camera/vine/Destroy()
 	STOP_PROCESSING(SSobj, src)
@@ -842,11 +870,11 @@
 
 /mob/camera/vine/proc/add_points()
 
-	var/how_many_points_to_add = rand(0,40)
+	var/how_many_points_to_add = rand(0,20)
 
-	if(how_many_points_to_add + vine_points > 400)
+	if(how_many_points_to_add + vine_points > max_vine_points)
 		how_many_points_to_add = 0
-		vine_points = 400
+		vine_points = max_vine_points
 /*
 
 	if(how_many_points_to_add + vine_points > 400)
@@ -865,7 +893,7 @@
 
 /mob/camera/vine/proc/again_points()
 
-	var/time = rand(10,100)
+	var/time = rand(20,40)
 
 	sleep(time)
 
@@ -922,7 +950,7 @@
 	if(!message)
 		return
 
-	var/verb = "states,"
+	var/verb = "creaks,"
 	var/rendered = "<font color=\"#006400\"><i><span class='game say'>Root Connection, <span class='name'>[name]</span> <span class='message'>[verb] <b>\"[message]\"</b></span></span></i></font>"
 
 	for(var/mob/M in GLOB.mob_list)
@@ -945,9 +973,9 @@
 
 	if(world.time < last_movement)
 		return
-	last_movement = world.time + 0.26 // cap to idk fps
+	last_movement = world.time + 0.28 // cap to idk fps
 
-	var/obj/structure/spacevine/sv = locate() in range("12x12", destination)
+	var/obj/structure/spacevine/sv = locate() in range("10x10", destination)
 	if(sv)
 		var/oldloc = loc
 		loc = destination
@@ -1018,7 +1046,7 @@
 
 	var/radius = 4
 
-	var/dmg = 1.5
+	var/dmg = 2
 
 	if(vine_points >= cost)
 		vine_points -= cost
@@ -1085,14 +1113,14 @@
 	rally_thorns_proc(T)
 
 /mob/camera/vine/proc/rally_thorns_proc(var/turf/T)
-	to_chat(src, "You rally your thorns.")
+	to_chat(src, "You rally your thorns...")
 
 	var/list/surrounding_turfs = block(locate(T.x - 1, T.y - 1, T.z), locate(T.x + 1, T.y + 1, T.z))
 	if(!surrounding_turfs.len)
 		return
 
 	for(var/mob/living/simple_animal/hostile/VineMinion in GLOB.alive_mob_list)
-		if(isturf(VineMinion.loc) && get_dist(VineMinion, T) <= 60 && ("vines" in VineMinion.faction) && !VineMinion.key)
+		if(isturf(VineMinion.loc) && get_dist(VineMinion, T) <= 80 && ("vines" in VineMinion.faction) && !VineMinion.key)
 			VineMinion.LoseTarget()
 			VineMinion.Goto(pick(surrounding_turfs), VineMinion.move_to_delay)
 	return
@@ -1104,10 +1132,12 @@
 
 	var/cost = 400
 
-	to_chat(src, "Waiting for a soul in 15 seconds. Dont do things to make your points lower 400.")
-
 	if(vine_points < cost || splited)
 		return
+
+	sleep(10)
+
+	to_chat(src, "Waiting for a soul in 15 seconds. Dont do things to make your points lower 400.")
 
 	var/list/candidates = SSghost_spawns.poll_candidates("Вы хотите занять роль Лозы?", ROLE_SPACEVINE, TRUE , 15 SECONDS)
 
@@ -1117,11 +1147,13 @@
 		var/turf/T = get_turf(src)
 		var/mob/camera/vine/cam = new /mob/camera/vine(T)
 		splited = TRUE
+		cam.verbs -= /mob/camera/vine/verb/new_council
 		cam.central_vine = src.central_vine
 		vine_points -= cost
 		to_chat(src, "A new Root Council was created.")
 		cam.init = FALSE
 		cam.splited = TRUE
+		cam.verbs -= /mob/camera/vine/verb/new_council
 		cam.key = candidate.key
 		src.central_vine.tied_to_cam = cam
 		message_admins("[key_name_admin(cam)] выбран на роль Лозы при разделении.")
