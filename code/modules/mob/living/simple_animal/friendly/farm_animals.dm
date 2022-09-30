@@ -37,6 +37,13 @@
 	QDEL_NULL(udder)
 	return ..()
 
+/mob/living/simple_animal/hostile/retaliate/goat/CanAttack(atom/the_target)
+	if(isvineminion(the_target))
+		return TRUE
+
+	if(istype(the_target, /obj/structure/alien/resin/flower_bud_enemy) || istype(the_target, /obj/structure/alien/resin/flower_bud) || istype(the_target, /obj/structure/alien/resin/giant_tomato))
+		return TRUE
+
 /mob/living/simple_animal/hostile/retaliate/goat/handle_automated_movement()
 	. = ..()
 	//chance to go crazy and start wacking stuff
@@ -53,7 +60,7 @@
 		for(var/direction in shuffle(list(1, 2, 4, 8, 5, 6, 9, 10)))
 			var/step = get_step(src, direction)
 			if(step)
-				if(locate(/obj/structure/spacevine) in step || locate(/obj/structure/glowshroom) in step)
+				if(locate(/obj/structure/spacevine) in step || locate(/obj/structure/glowshroom) in step || locate(/obj/structure/glowshroom) in step)
 					Move(step, get_dir(src, step))
 
 /mob/living/simple_animal/hostile/retaliate/goat/Life(seconds, times_fired)
@@ -98,6 +105,15 @@
 		var/obj/item/organ/external/NB = pick(H.bodyparts)
 		H.visible_message("<span class='warning'>[src] takes a big chomp out of [H]!</span>", "<span class='userdanger'>[src] takes a big chomp out of your [NB.name]!</span>")
 		NB.droplimb()
+
+	if(isvineminion(target))
+		var/mob/living/simple_animal/hostile/targ = target
+		visible_message("<span class='warning'>[src] takes a big chomp out of [targ]!</span>")
+		targ.adjustBruteLoss(10)
+
+		if(prob(20))
+			say("Nom")
+
 
 //cow
 /mob/living/simple_animal/cow

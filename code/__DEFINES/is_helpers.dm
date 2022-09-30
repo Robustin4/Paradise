@@ -7,6 +7,8 @@
 //Simple animals
 #define isshade(A) (istype(A, /mob/living/simple_animal/shade))
 
+#define isvineminion(A) (istype(A, /mob/living/simple_animal/hostile/killertomato/spacevine) || istype(A, /mob/living/simple_animal/hostile/venus_human_trap) || istype(A, /mob/living/simple_animal/hostile/venus_human_trap/red_piranha))
+
 #define isconstruct(A) (istype(A, /mob/living/simple_animal/hostile/construct))
 
 //Objects

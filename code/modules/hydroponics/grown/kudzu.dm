@@ -27,6 +27,7 @@
 	return BRUTELOSS
 
 /obj/item/seeds/kudzu/proc/plant(mob/user)
+	var/once = FALSE
 	if(istype(user.loc, /turf/space))
 		return
 	var/turf/T = get_turf(src)
@@ -35,6 +36,25 @@
 	new /obj/structure/spacevine_controller(user.loc, mutations, potency, production)
 	user.drop_item()
 	qdel(src)
+
+	while(locate(T, /obj/structure/spacevine/) && !once)
+		once = TRUE
+		var/list/candidates = SSghost_spawns.poll_candidates("Вы хотите занять роль Лозы?", ROLE_SPACEVINE, TRUE, 15 SECONDS)
+
+		var/mob/candidate = pick(candidates)
+
+		for(var/obj/structure/spacevine/SV in T)
+			if(candidate)
+				var/mob/camera/vine/cam = new /mob/camera/vine(T)
+				cam.central_vine = SV
+				cam.init = FALSE
+				cam.key = candidate.key
+				SV.tied_to_cam = cam
+				message_admins("[key_name_admin(cam)] выбран на роль Лозы по событию.")
+				log_game("[key_name_admin(cam)] выбран на роль Лозы по событию.")
+			else
+				message_admins("Никто не был выбран на роль Лозы по событию.")
+				log_game("Никто не был выбран на роль Лозы по событию.")
 
 /obj/item/seeds/kudzu/attack_self(mob/user)
 	plant(user)
