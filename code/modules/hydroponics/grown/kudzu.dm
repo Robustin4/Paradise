@@ -50,8 +50,8 @@
 				cam.init = FALSE
 				cam.key = candidate.key
 				SV.tied_to_cam = cam
-				message_admins("[key_name_admin(cam)] выбран на роль Лозы по событию.")
-				log_game("[key_name_admin(cam)] выбран на роль Лозы по событию.")
+				message_admins("[key_name_admin(cam)] выбран на роль Лозы по искуственному высаживанию кудзы.")
+				log_game("[key_name_admin(cam)] выбран на роль Лозы по искуственному высаживанию кудзы.")
 			else
 				message_admins("Никто не был выбран на роль Лозы по событию.")
 				log_game("Никто не был выбран на роль Лозы по событию.")

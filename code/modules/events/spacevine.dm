@@ -954,9 +954,8 @@
 	var/rendered = "<font color=\"#006400\"><i><span class='game say'>Root Connection, <span class='name'>[name]</span> <span class='message'>[verb] <b>\"[message]\"</b></span></span></i></font>"
 
 	for(var/mob/M in GLOB.mob_list)
-		if(isvinecouncil(M) || isobserver(M))
-			if(("vines" in M.faction))
-				M.show_message(rendered, 2)
+		if(isvinecouncil(M) || isobserver(M) || isvineminion(M))
+			M.show_message(rendered, 2)
 
 /mob/camera/vine/emote(act, m_type = 1, message = null, force)
 	return
