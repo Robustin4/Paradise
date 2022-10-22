@@ -559,6 +559,12 @@
 	name = "PDA"
 	var/datum/action/item_action/chameleon/change/chameleon_action
 
+/obj/item/radio/headset/chameleon/syndi_key
+	ks1type = /obj/item/encryptionkey/syndicate
+
+/obj/item/radio/headset/chameleon/syndteam_key
+	ks1type = /obj/item/encryptionkey/syndteam
+
 /obj/item/pda/chameleon/Initialize(mapload)
 	. = ..()
 	chameleon_action = new(src)

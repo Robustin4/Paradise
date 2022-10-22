@@ -65,6 +65,12 @@
 	item_state = "o_suit"
 	item_color = "orange"
 
+/obj/item/clothing/under/color/orange/prison_inf
+	name = "orange jumpsuit"
+	desc = "It's standardised prisoner-wear. Suit sensors are broken and have several sewn-in body armor plates inside."
+	has_sensor = FALSE
+	armor = list("melee" = 5, "bullet" = 0, "laser" = 0,"energy" = 0, "bomb" = 0, "bio" = 0, "rad" = 0, "fire" = 0, "acid" = 0)
+
 /obj/item/clothing/under/color/orange/prison
 	name = "orange jumpsuit"
 	desc = "It's standardised Nanotrasen prisoner-wear. Its suit sensors are stuck in the \"Fully On\" position."

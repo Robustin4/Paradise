@@ -30,6 +30,7 @@
 #define ROLE_RAIDER				"vox raider"
 #define ROLE_TRADER				"trader"
 #define ROLE_VAMPIRE			"vampire"
+#define ROLE_INFILTRATOR		"infiltrator"
 // Role tags for EVERYONE!
 #define ROLE_BORER				"cortical borer"
 #define ROLE_DEMON				"slaughter demon"
@@ -58,6 +59,7 @@ GLOBAL_LIST_INIT(special_roles, list(
 	ROLE_GSPIDER, 										// Giant spider
 	ROLE_GUARDIAN, 										// Guardian
 	ROLE_MORPH, 										// Morph
+	ROLE_INFILTRATOR, 									// Infiltrator
 	ROLE_OPERATIVE = /datum/game_mode/nuclear, 			// Operative
 	ROLE_PAI, 											// PAI
 	ROLE_POSIBRAIN, 									// Positronic brain

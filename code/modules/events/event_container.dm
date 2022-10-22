@@ -193,6 +193,7 @@ GLOBAL_LIST_EMPTY(event_last_fired)
 		new /datum/event_meta(EVENT_LEVEL_MAJOR, "Миграция карпов",	/datum/event/carp_migration,	10,						list(ASSIGNMENT_SECURITY =  3), TRUE),	// 4.8% on high pop, 3.4% on low pop
 		//new /datum/event_meta(EVENT_LEVEL_MAJOR, "Containment Breach",	/datum/event/prison_break/station,	0,			list(ASSIGNMENT_ANY = 5)),
 		new /datum/event_meta(EVENT_LEVEL_MAJOR, "Перегрузка ЛКП",	/datum/event/apc_overload,		0),
+		new /datum/event_meta(EVENT_LEVEL_MAJOR, "Внедрение",		/datum/event/infiltration,	40, TRUE),
 		new /datum/event_meta(EVENT_LEVEL_MAJOR, "Блоб",			/datum/event/blob, 				30,						list(ASSIGNMENT_ENGINEER =  5), TRUE),	// 6.9% on high pop, 5.5% on low pop
 		new /datum/event_meta(EVENT_LEVEL_MAJOR, "Метеорный вал",	/datum/event/meteor_wave,		30,						list(ASSIGNMENT_ENGINEER =  5),	TRUE),	// 6.9% on high pop, 5.5% on low pop
 		new /datum/event_meta(EVENT_LEVEL_MAJOR, "Визит абдукторов",/datum/event/abductor, 		    20, 					list(ASSIGNMENT_SECURITY =  3), TRUE),	// 5.8% on high pop, 4.5% on low pop
